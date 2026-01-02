@@ -3,6 +3,11 @@ import { io } from "socket.io-client";
 let socket = null;
 let onlineUsersCallback = null;
 
+const SOCKET_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5001"
+    : undefined; // same origin in production
+
 export const setOnlineUsersCallback = (callback) => {
   onlineUsersCallback = callback;
   // If socket is already connected and we have a callback, we might have missed the initial event
@@ -30,7 +35,7 @@ export const connectSocket = (userId) => {
   }
 
   // Create new socket connection
-  socket = io("http://localhost:5001", {
+  socket = io(SOCKET_URL, {
     query: { userId },
     withCredentials: true,
     autoConnect: true,
